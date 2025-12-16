@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Участницы</title>
+    <link rel="stylesheet" href="{% static 'css/Navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/AuthPage.css' %}">
+    <link rel="stylesheet" href="{% static 'css/Candidates.css' %}">
+</head>
+<body class="page">
+{% include "partials/navbar.html" %}
+<main class="page-content">
+    <div class="card">
+        <div class="candidates-header">
+            <h1>Участницы</h1>
+            <a class="nav-btn" href="{% url 'candidate-create' %}">Добавить</a>
+        </div>
+
+        {% if page_obj %}
+            <div class="candidates-list">
+                {% for candidate in page_obj.object_list %}
+                    <div class="candidate-row">
+                        <div class="candidate-row__info">
+                            <strong>{{ candidate.last_name }} {{ candidate.first_name }}</strong>
+                            <div class="muted">Курс {{ candidate.course }}, {{ candidate.group }}</div>
+                            {% if candidate.info %}
+                                <div class="muted">{{ candidate.info }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="candidate-row__actions">
+                            <a class="nav-link" href="{% url 'candidate-update' candidate.pk %}">Редактировать</a>
+                            <a class="nav-link danger" href="{% url 'candidate-delete' candidate.pk %}">Удалить</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            {% if page_obj.paginator.num_pages > 1 %}
+                <div class="pagination">
+                    {% if page_obj.has_previous %}
+                        <a class="nav-link" href="?page={{ page_obj.previous_page_number }}">‹ Назад</a>
+                    {% endif %}
+                    <span class="muted">Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</span>
+                    {% if page_obj.has_next %}
+                        <a class="nav-link" href="?page={{ page_obj.next_page_number }}">Вперёд ›</a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% else %}
+            <p class="muted">Участницы не добавлены.</p>
+        {% endif %}
+    </div>
+</main>
+</body>
+</html>

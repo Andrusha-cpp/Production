@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="{% static 'css/Navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/AuthPage.css' %}">
+    <link rel="stylesheet" href="{% static 'css/Candidates.css' %}">
+</head>
+<body class="page">
+{% include "partials/navbar.html" %}
+<main class="page-content">
+    <div class="card">
+        <form class="form form-wide" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <h1 class="form-title">{{ title }}</h1>
+            {% for field in form %}
+                <div class="form-group">
+                    <label class="form-label">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}<div class="muted">{{ field.help_text }}</div>{% endif %}
+                    {% for error in field.errors %}
+                        <div class="error-text">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            {% if form.non_field_errors %}
+                {% for error in form.non_field_errors %}
+                    <div class="error-text">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+            <div class="form-actions">
+                <a class="nav-link" href="{% url 'candidate-list' %}">Назад</a>
+                <button class="btn btn-primary" type="submit">Сохранить</button>
+            </div>
+        </form>
+    </div>
+</main>
+</body>
+</html>

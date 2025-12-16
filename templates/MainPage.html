@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>RAF</title>
+        <link rel="stylesheet" href="{% static 'css/Navbar.css' %}">
+        <link rel="stylesheet" href="{% static 'css/MainPage.css' %}">
+    </head>
+    <body>
+        {% include "partials/navbar.html" %}
+        <main class="main-content">
+            <div class="container">
+            <h1>Добро пожаловать на Тотализатор Мисс РФиКТ</h1>
+            <h2>Войдите или создайте аккаунт</h2>
+
+            <div class="buttons">
+                <a href="{% url 'login' %}" class="btn">Вход</a>
+                <a href="{% url 'register' %}" class="btn">Регистрация</a>
+            </div>
+        </div>
+        </main>
+    </body>
+</html>

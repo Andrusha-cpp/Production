@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Ставки</title>
+    <link rel="stylesheet" href="{% static 'css/Navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/AuthPage.css' %}">
+    <link rel="stylesheet" href="{% static 'css/BetPage.css' %}">
+</head>
+<body class="page">
+
+{% include "partials/navbar.html" %}
+
+<main class="page-content">
+    <div class="bet-wrapper">
+        <section>
+            <h1 class="form-title">Участницы</h1>
+            {% if candidates %}
+                <div class="candidate-list">
+                    {% for candidate in candidates %}
+                        <a class="candidate-card link-card" href="{% url 'candidate-detail' candidate.id %}">
+                            {% if candidate.photo_url %}
+                                <img class="candidate-photo" src="{{ candidate.photo_url }}" alt="Фото {{ candidate.display_name }}">
+                            {% else %}
+                                <div class="candidate-photo placeholder">Нет фото</div>
+                            {% endif %}
+                            <div class="candidate-info">
+                                <strong>{{ candidate.display_name }}</strong>
+                                {% if candidate.info %}
+                                    <p>{{ candidate.info }}</p>
+                                {% endif %}
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="info-text">Кандидаты пока не добавлены.</p>
+            {% endif %}
+        </section>
+    </div>
+</main>
+</body>
+</html>
