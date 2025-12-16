@@ -1,19 +1,27 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>Login</title>
-    </head>
-    <body>
-        <!--Форма заполнения инфы-->
-        <form action="save.py" method="post">
-            <label>Email</label><br>
-            <input type="email" name="email" placeholder="Введите почту"><br>
+<head>
+    <meta charset="utf-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="page">
 
-            <label>Пароль</label><br>
-            <input type="password" name="password" placeholder="Введите пароль"><br>
+    <form class="form form-login" action="save.py" method="post">
+        <h1 class="form-title">Вход</h1>
 
-            <button type="submit">Вход</button>
-        </form>
-    </body>
+        <div class="form-group">
+            <label class="form-label">Email</label>
+            <input class="form-input" type="email" name="email" placeholder="Введите почту">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Пароль</label>
+            <input class="form-input" type="password" name="password" placeholder="Введите пароль">
+        </div>
+
+        <button class="btn btn-primary" type="submit">Вход</button>
+    </form>
+
+</body>
 </html>

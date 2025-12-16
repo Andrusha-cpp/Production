@@ -1,24 +1,32 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>Registration</title>
-    </head>
-    <body>
-        <!--Форма заполнения инфы-->
-        <!--Сохраняет инфу в save.py под именами name-->
-        <form action="save.py" method="post">
-            <label>ФИО</label><br>
-            <input type="text" name="fullname" placeholder="Введите имя"><br>
+<head>
+    <meta charset="utf-8">
+    <title>Registration</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="page">
 
-            <label>Email</label><br>
-            <input type="email" name="email" placeholder="Введите почту"><br>
+    <form class="form form-register" action="save.py" method="post">
+        <h1 class="form-title">Регистрация</h1>
 
-            <label>Пароль</label><br>
-            <input type="password" name="password" placeholder="Введите пароль"><br>
+        <div class="form-group">
+            <label class="form-label">ФИО</label>
+            <input class="form-input" type="text" name="fullname" placeholder="Введите имя">
+        </div>
 
-            <!---->
-            <button type="submit">Регистрация</button>
-        </form>
-    </body>
+        <div class="form-group">
+            <label class="form-label">Email</label>
+            <input class="form-input" type="email" name="email" placeholder="Введите почту">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Пароль</label>
+            <input class="form-input" type="password" name="password" placeholder="Введите пароль">
+        </div>
+
+        <button class="btn btn-primary" type="submit">Регистрация</button>
+    </form>
+
+</body>
 </html>
