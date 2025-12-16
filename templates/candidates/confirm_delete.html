@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Удалить участницу</title>
+    <link rel="stylesheet" href="{% static 'css/Navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/AuthPage.css' %}">
+    <link rel="stylesheet" href="{% static 'css/Candidates.css' %}">
+</head>
+<body class="page">
+{% include "partials/navbar.html" %}
+<main class="page-content">
+    <div class="card">
+        <form class="form" method="post">
+            {% csrf_token %}
+            <h1 class="form-title">Удалить</h1>
+            <p>Удалить участницу <strong>{{ candidate.last_name }} {{ candidate.first_name }}</strong>?</p>
+            <div class="form-actions">
+                <a class="nav-link" href="{% url 'candidate-list' %}">Отмена</a>
+                <button class="btn btn-primary" type="submit">Удалить</button>
+            </div>
+        </form>
+    </div>
+</main>
+</body>
+</html>
