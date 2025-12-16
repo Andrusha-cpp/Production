@@ -1,0 +1,47 @@
+/* ===== Страница ставок ===== */
+
+.bet-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.bet-form {
+    width: 400px;
+    text-align: center;
+}
+
+.candidate-photo {
+    width: 220px;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    background: #eee;
+}
+
+#candidateName {
+    margin: 10px 0;
+}
+
+#candidateDesc {
+    font-size: 14px;
+    color: #555;
+}
+
+.arrow-btn {
+    font-size: 24px;
+    background: #4e54c8;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.arrow-btn:hover {
+    background: #3c40a4;
+}
+
