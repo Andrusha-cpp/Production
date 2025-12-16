@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Registration</title>
+    </head>
+    <body>
+        <!--Форма заполнения инфы-->
+        <!--Сохраняет инфу в save.py под именами name-->
+        <form action="save.py" method="post">
+            <label>ФИО</label><br>
+            <input type="text" name="fullname" placeholder="Введите имя"><br>
+
+            <label>Email</label><br>
+            <input type="email" name="email" placeholder="Введите почту"><br>
+
+            <label>Пароль</label><br>
+            <input type="password" name="password" placeholder="Введите пароль"><br>
+
+            <!---->
+            <button type="submit">Регистрация</button>
+        </form>
+    </body>
+</html>
