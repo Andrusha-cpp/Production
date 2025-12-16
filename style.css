@@ -1,19 +1,16 @@
-/* ===== Общие стили страницы ===== */
-body {
+/* ===== Страница ===== */
+.page {
     margin: 0;
     font-family: Arial, sans-serif;
-
-    /* фон страницы */
     background: linear-gradient(135deg, #4e54c8, #8f94fb);
     min-height: 100vh;
 
-    /* центрируем форму */
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-form {
+.form {
     background: white;
     padding: 40px;
     width: 360px;
@@ -25,40 +22,50 @@ form {
     flex-direction: column;
 }
 
-label {
+.form-title {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.form-label {
     font-size: 14px;
     margin-bottom: 6px;
 }
 
-input {
+.form-input {
     padding: 12px;
-    margin-bottom: 20px;
-
     font-size: 14px;
+
     border-radius: 8px;
     border: 1px solid #ccc;
 }
 
-input:focus {
+.form-input:focus {
     outline: none;
     border-color: #4e54c8;
 }
 
-button {
+.btn {
     padding: 12px;
-
-    background: #4e54c8;
-    color: white;
-
-    border: none;
-    border-radius: 8px;
-
     font-size: 16px;
-    cursor: pointer;
 
+    border-radius: 8px;
+    cursor: pointer;
     transition: 0.3s;
 }
 
-button:hover {
+.btn-primary {
+    background: #4e54c8;
+    color: white;
+    border: none;
+}
+
+.btn-primary:hover {
     background: #3c40a4;
 }
