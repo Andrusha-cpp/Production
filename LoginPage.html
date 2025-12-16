@@ -7,21 +7,25 @@
 </head>
 <body class="page">
 
-    <form class="form form-login" action="save.py" method="post">
-        <h1 class="form-title">Вход</h1>
+<form class="form" id="loginForm">
+    <h1 class="form-title">Вход</h1>
 
-        <div class="form-group">
-            <label class="form-label">Email</label>
-            <input class="form-input" type="email" name="email" placeholder="Введите почту">
-        </div>
+    <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" type="email" id="email" placeholder="Введите почту">
+    </div>
 
-        <div class="form-group">
-            <label class="form-label">Пароль</label>
-            <input class="form-input" type="password" name="password" placeholder="Введите пароль">
-        </div>
+    <div class="form-group">
+        <label class="form-label">Пароль</label>
+        <input class="form-input" type="password" id="password" placeholder="Введите пароль">
+    </div>
 
-        <button class="btn btn-primary" type="submit">Вход</button>
-    </form>
+    <!-- Текст ошибки -->
+    <p class="error-text" id="errorText"></p>
 
+    <button class="btn btn-primary" type="submit">Вход</button>
+</form>
+
+<script src="login.js"></script>
 </body>
 </html>

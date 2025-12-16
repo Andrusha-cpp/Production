@@ -69,3 +69,10 @@
 .btn-primary:hover {
     background: #3c40a4;
 }
+
+.error-text {
+    color: red;
+    font-size: 14px;
+    margin-bottom: 15px;
+    min-height: 18px;
+}
