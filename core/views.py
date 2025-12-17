@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout, get_user_model, upd
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.core.paginator import Paginator
-from django.db.models import Sum
+from django.db.models import Sum, Q
 from django.shortcuts import render, get_object_or_404, redirect
 
 from .forms import CandidateForm, RegistrationForm, ProfileForm, AdminUserForm
@@ -37,8 +37,18 @@ def _calculate_coefficient(candidate):
 def index(request):
     if not request.user.is_authenticated:
         return redirect("login")
-    candidates = [_serialize_candidate(c) for c in Candidate.objects.all().order_by("id")]
-    return render(request, "MainPage.html", {"candidates": candidates})
+    search_query = (request.GET.get("q") or "").strip()
+    candidates_qs = Candidate.objects.all().order_by("id")
+    if search_query:
+        candidates_qs = candidates_qs.filter(
+            Q(first_name__icontains=search_query)
+            | Q(last_name__icontains=search_query)
+            | Q(patronymic__icontains=search_query)
+            | Q(info__icontains=search_query)
+            | Q(group__icontains=search_query)
+        )
+    candidates = [_serialize_candidate(c) for c in candidates_qs]
+    return render(request, "MainPage.html", {"candidates": candidates, "search_query": search_query})
 
 
 def login_view(request):

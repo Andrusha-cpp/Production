@@ -14,6 +14,10 @@
                     <h1 class="mb-1">Участницы</h1>
                     <p class="text-muted mb-0">Выберите участницу, чтобы узнать больше и сделать ставку.</p>
                 </div>
+                <form class="d-flex gap-2" method="get" action="{% url 'home' %}">
+                    <input type="search" name="q" class="form-control" placeholder="Поиск по имени, группе..." value="{{ search_query|default_if_none:'' }}">
+                    <button class="btn btn-outline-primary" type="submit">Поиск</button>
+                </form>
             </div>
 
             {% if candidates %}
@@ -22,7 +26,9 @@
                         <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                             <div class="card h-100 shadow-sm">
                                 {% if candidate.photo_url %}
-                                    <img src="{{ candidate.photo_url }}" class="card-img-top" alt="Фото {{ candidate.display_name }}">
+                                    <div class="ratio ratio-4x3 bg-light">
+                                        <img src="{{ candidate.photo_url }}" class="card-img-top object-fit-cover" alt="Фото {{ candidate.display_name }}">
+                                    </div>
                                 {% endif %}
                                 <div class="card-body d-flex flex-column">
                                     <h5 class="card-title">{{ candidate.display_name }}</h5>
@@ -36,7 +42,11 @@
                     {% endfor %}
                 </div>
             {% else %}
-                <div class="alert alert-secondary">Кандидаты пока не добавлены.</div>
+                {% if search_query %}
+                    <div class="alert alert-secondary">По запросу «{{ search_query }}» кандидаты не найдены.</div>
+                {% else %}
+                    <div class="alert alert-secondary">Кандидаты пока не добавлены.</div>
+                {% endif %}
             {% endif %}
         </main>
     </body>
