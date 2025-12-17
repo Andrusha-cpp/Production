@@ -5,7 +5,10 @@
 1. Установите зависимости (Python 3.12+):
    ```bash
    python -m venv .venv
+   # macOS/Linux:
    source .venv/bin/activate
+   # Windows (PowerShell):
+   .venv\Scripts\Activate.ps1
    pip install -r requirements.txt
    ```
 
@@ -23,3 +26,5 @@
    ```bash
    python manage.py runserver 0.0.0.0:8000
    ```
+
+Приложение будет доступно на http://localhost:8000/
