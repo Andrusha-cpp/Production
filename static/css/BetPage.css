@@ -83,3 +83,39 @@
     gap: 16px;
     align-items: flex-start;
 }
+
+.bets-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    gap: 12px;
+}
+
+.bets-table {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.bets-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 0.8fr 1.2fr;
+    padding: 12px;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    align-items: center;
+}
+
+.bets-row--head {
+    background: linear-gradient(135deg, #4e54c8, #8f94fb);
+    color: white;
+    font-weight: bold;
+    box-shadow: none;
+}
+
+.right {
+    text-align: right;
+}

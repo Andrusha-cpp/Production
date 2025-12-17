@@ -3,22 +3,50 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>RAF</title>
+        <title>Участницы</title>
         <link rel="stylesheet" href="{% static 'css/Navbar.css' %}">
         <link rel="stylesheet" href="{% static 'css/MainPage.css' %}">
+        <link rel="stylesheet" href="{% static 'css/BetPage.css' %}">
     </head>
     <body>
         {% include "partials/navbar.html" %}
         <main class="main-content">
-            <div class="container">
-            <h1>Добро пожаловать на Тотализатор Мисс РФиКТ</h1>
-            <h2>Войдите или создайте аккаунт</h2>
+            <div class="container container--wide">
+                <div class="hero">
+                    <div>
+                        <h1>Участницы</h1>
+                        <p class="muted">Выберите участницу, чтобы узнать больше и сделать ставку.</p>
+                    </div>
+                    {% if not request.user.is_authenticated %}
+                        <div class="buttons">
+                            <a href="{% url 'login' %}" class="btn">Вход</a>
+                            <a href="{% url 'register' %}" class="btn">Регистрация</a>
+                        </div>
+                    {% endif %}
+                </div>
 
-            <div class="buttons">
-                <a href="{% url 'login' %}" class="btn">Вход</a>
-                <a href="{% url 'register' %}" class="btn">Регистрация</a>
+                {% if candidates %}
+                    <div class="candidate-list">
+                        {% for candidate in candidates %}
+                            <a class="candidate-card link-card" href="{% url 'candidate-detail' candidate.id %}">
+                                {% if candidate.photo_url %}
+                                    <img class="candidate-photo" src="{{ candidate.photo_url }}" alt="Фото {{ candidate.display_name }}">
+                                {% else %}
+                                    <div class="candidate-photo placeholder">Нет фото</div>
+                                {% endif %}
+                                <div class="candidate-info">
+                                    <strong>{{ candidate.display_name }}</strong>
+                                    {% if candidate.info %}
+                                        <p>{{ candidate.info }}</p>
+                                    {% endif %}
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="info-text">Кандидаты пока не добавлены.</p>
+                {% endif %}
             </div>
-        </div>
         </main>
     </body>
 </html>

@@ -8,8 +8,24 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .forms import CandidateForm
 from .models import Candidate, Bet
 
+def _serialize_candidate(candidate):
+    try:
+        photo_url = candidate.photo.url
+    except (ValueError, AttributeError):
+        photo_url = ""
+    return {
+        "id": candidate.id,
+        "display_name": f"{candidate.last_name} {candidate.first_name}",
+        "info": candidate.info,
+        "photo_url": photo_url,
+    }
+
+
 def index(request):
-    return render(request, "MainPage.html")
+    if not request.user.is_authenticated:
+        return redirect("login")
+    candidates = [_serialize_candidate(c) for c in Candidate.objects.all().order_by("id")]
+    return render(request, "MainPage.html", {"candidates": candidates})
 
 
 def login_view(request):
@@ -76,21 +92,24 @@ def logout_view(request):
 
 @login_required
 def bet_view(request):
-    candidate_items = []
-    for candidate in Candidate.objects.all().order_by("id"):
-        try:
-            photo_url = candidate.photo.url
-        except (ValueError, AttributeError):
-            photo_url = ""
-        candidate_items.append(
+    bets = (
+        Bet.objects.filter(user=request.user)
+        .select_related("candidate")
+        .order_by("-created_at")
+    )
+    bet_items = []
+    for bet in bets:
+        bet_items.append(
             {
-                "id": candidate.id,
-                "display_name": f"{candidate.last_name} {candidate.first_name}",
-                "info": candidate.info,
-                "photo_url": photo_url,
+                "id": bet.id,
+                "candidate_id": bet.candidate_id,
+                "candidate_name": f"{bet.candidate.last_name} {bet.candidate.first_name}",
+                "amount": bet.amount,
+                "coefficient": bet.coefficient,
+                "created_at": bet.created_at,
             }
         )
-    return render(request, "BetPage.html", {"candidates": candidate_items})
+    return render(request, "BetPage.html", {"bets": bet_items})
 
 
 @login_required
