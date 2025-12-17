@@ -4,46 +4,50 @@
 <head>
     <meta charset="utf-8">
     <title>{{ candidate.last_name }} {{ candidate.first_name }}</title>
-    <link rel="stylesheet" href="{% static 'css/Navbar.css' %}">
-    <link rel="stylesheet" href="{% static 'css/AuthPage.css' %}">
-    <link rel="stylesheet" href="{% static 'css/BetPage.css' %}">
+    {% include "partials/bootstrap.html" %}
 </head>
-<body class="page">
+<body class="bg-light">
 {% include "partials/navbar.html" %}
-<main class="page-content">
-    <div class="card candidate-detail">
-        <div class="candidate-detail__profile">
-            {% if candidate.photo %}
-                <img class="candidate-photo large" src="{{ candidate.photo.url }}" alt="Фото {{ candidate }}">
-            {% else %}
-                <div class="candidate-photo placeholder large">Нет фото</div>
-            {% endif %}
-            <div class="candidate-info">
-                <h1>{{ candidate.last_name }} {{ candidate.first_name }}</h1>
-                <p class="muted">Курс {{ candidate.course }}, {{ candidate.group }}</p>
-                {% if candidate.info %}
-                    <p>{{ candidate.info }}</p>
+<main class="container py-4">
+    <div class="row g-4">
+        <div class="col-12 col-lg-6">
+            <div class="card shadow-sm h-100">
+                {% if candidate.photo %}
+                    <img class="card-img-top" src="{{ candidate.photo.url }}" alt="Фото {{ candidate }}">
                 {% endif %}
+                <div class="card-body">
+                    <h1 class="h4">{{ candidate.last_name }} {{ candidate.first_name }}</h1>
+                    <p class="text-muted mb-2">Курс {{ candidate.course }}, {{ candidate.group }}</p>
+                    {% if candidate.info %}
+                        <p class="mb-0">{{ candidate.info }}</p>
+                    {% endif %}
+                </div>
             </div>
         </div>
-        <form class="form bet-form" method="post">
-            {% csrf_token %}
-            <h2 class="form-title">Сделать ставку</h2>
-            {% if error %}
-                <p class="error-text">{{ error }}</p>
-            {% endif %}
-            {% if message %}
-                <p class="success-text">{{ message }}</p>
-            {% endif %}
-            <div class="form-group">
-                <label class="form-label" for="betAmount">Сумма ставки</label>
-                <input id="betAmount" class="form-input" type="number" name="amount" min="1" step="0.01" placeholder="Введите сумму" value="{{ amount_value|default_if_none:'' }}" required>
+        <div class="col-12 col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h2 class="h5 mb-3">Сделать ставку</h2>
+                    <form method="post">
+                        {% csrf_token %}
+                        {% if error %}
+                            <div class="alert alert-danger py-2">{{ error }}</div>
+                        {% endif %}
+                        {% if message %}
+                            <div class="alert alert-success py-2">{{ message }}</div>
+                        {% endif %}
+                        <div class="mb-3">
+                            <label class="form-label" for="betAmount">Сумма ставки</label>
+                            <input id="betAmount" class="form-control" type="number" name="amount" min="1" step="0.01" placeholder="Введите сумму" value="{{ amount_value|default_if_none:'' }}" required>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <a class="btn btn-outline-secondary" href="{% url 'home' %}">Назад</a>
+                            <button class="btn btn-primary" type="submit">Сделать ставку</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-actions">
-                <a class="nav-link" href="{% url 'home' %}">Назад</a>
-                <button class="btn btn-primary" type="submit">Сделать ставку</button>
-            </div>
-        </form>
+        </div>
     </div>
 </main>
 </body>

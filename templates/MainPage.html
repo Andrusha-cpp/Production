@@ -4,49 +4,40 @@
     <head>
         <meta charset="utf-8">
         <title>Участницы</title>
-        <link rel="stylesheet" href="{% static 'css/Navbar.css' %}">
-        <link rel="stylesheet" href="{% static 'css/MainPage.css' %}">
-        <link rel="stylesheet" href="{% static 'css/BetPage.css' %}">
+        {% include "partials/bootstrap.html" %}
     </head>
-    <body>
+    <body class="bg-light">
         {% include "partials/navbar.html" %}
-        <main class="main-content">
-            <div class="container container--wide">
-                <div class="hero">
-                    <div>
-                        <h1>Участницы</h1>
-                        <p class="muted">Выберите участницу, чтобы узнать больше и сделать ставку.</p>
-                    </div>
-                    {% if not request.user.is_authenticated %}
-                        <div class="buttons">
-                            <a href="{% url 'login' %}" class="btn">Вход</a>
-                            <a href="{% url 'register' %}" class="btn">Регистрация</a>
-                        </div>
-                    {% endif %}
+        <main class="container py-4">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-4">
+                <div>
+                    <h1 class="mb-1">Участницы</h1>
+                    <p class="text-muted mb-0">Выберите участницу, чтобы узнать больше и сделать ставку.</p>
                 </div>
-
-                {% if candidates %}
-                    <div class="candidate-list">
-                        {% for candidate in candidates %}
-                            <a class="candidate-card link-card" href="{% url 'candidate-detail' candidate.id %}">
-                                {% if candidate.photo_url %}
-                                    <img class="candidate-photo" src="{{ candidate.photo_url }}" alt="Фото {{ candidate.display_name }}">
-                                {% else %}
-                                    <div class="candidate-photo placeholder">Нет фото</div>
-                                {% endif %}
-                                <div class="candidate-info">
-                                    <strong>{{ candidate.display_name }}</strong>
-                                    {% if candidate.info %}
-                                        <p>{{ candidate.info }}</p>
-                                    {% endif %}
-                                </div>
-                            </a>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    <p class="info-text">Кандидаты пока не добавлены.</p>
-                {% endif %}
             </div>
+
+            {% if candidates %}
+                <div class="row g-3">
+                    {% for candidate in candidates %}
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                            <div class="card h-100 shadow-sm">
+                                {% if candidate.photo_url %}
+                                    <img src="{{ candidate.photo_url }}" class="card-img-top" alt="Фото {{ candidate.display_name }}">
+                                {% endif %}
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title">{{ candidate.display_name }}</h5>
+                                    {% if candidate.info %}
+                                        <p class="card-text text-muted">{{ candidate.info }}</p>
+                                    {% endif %}
+                                    <a class="btn btn-primary mt-auto" href="{% url 'candidate-detail' candidate.id %}">Подробнее</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-secondary">Кандидаты пока не добавлены.</div>
+            {% endif %}
         </main>
     </body>
 </html>

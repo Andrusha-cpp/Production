@@ -1,22 +1,37 @@
 {% load static %}
-<nav class="navbar">
-    <div class="navbar__brand">
-        <a href="{% url 'home' %}">Тотализатор</a>
-    </div>
-    <div class="navbar__actions">
-        {% if request.user.is_authenticated %}
-            <a class="nav-link" href="{% url 'home' %}">Участницы</a>
-            <a class="nav-link" href="{% url 'bet' %}">Мои ставки</a>
-            {% if request.user.is_staff %}
-                <a class="nav-link" href="{% url 'candidate-list' %}">Управление</a>
-            {% endif %}
-            <form method="post" action="{% url 'logout' %}" class="nav-logout-form">
-                {% csrf_token %}
-                <button type="submit" class="nav-btn">Выйти</button>
-            </form>
-        {% else %}
-            <a class="nav-link" href="{% url 'login' %}">Вход</a>
-            <a class="nav-btn" href="{% url 'register' %}">Регистрация</a>
-        {% endif %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'home' %}">Тотализатор</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNavbar">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                {% if request.user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}">Участницы</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'bet' %}">Мои ставки</a>
+                    </li>
+                    {% if request.user.is_staff %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'candidate-list' %}">Управление</a>
+                        </li>
+                    {% endif %}
+                {% endif %}
+            </ul>
+            <div class="d-flex gap-2">
+                {% if request.user.is_authenticated %}
+                    <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-light btn-sm">Выйти</button>
+                    </form>
+                {% else %}
+                    <a class="btn btn-outline-light btn-sm" href="{% url 'login' %}">Вход</a>
+                    <a class="btn btn-primary btn-sm" href="{% url 'register' %}">Регистрация</a>
+                {% endif %}
+            </div>
+        </div>
     </div>
 </nav>
