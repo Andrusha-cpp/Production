@@ -27,10 +27,10 @@ def _calculate_coefficient(candidate):
     """Calculate a simple dynamic coefficient based on the bet pool."""
     pool_total = Bet.objects.aggregate(total=Sum("amount")).get("total") or Decimal("0")
     candidate_total = candidate.bets.aggregate(total=Sum("amount")).get("total") or Decimal("0")
-    # Add a larger smoothing value to avoid huge spikes when there are few or no bets.
-    smoothing = Decimal("1000")
+    # Smoothing to reduce volatility and avoid huge odds for empty pools.
+    smoothing = Decimal("200")
     smoothed_coeff = (pool_total + smoothing) / (candidate_total + smoothing)
-    coeff = max(Decimal("1.10"), min(smoothed_coeff, Decimal("10")))
+    coeff = max(Decimal("1.10"), min(smoothed_coeff, Decimal("3.00")))
     return coeff.quantize(Decimal("0.01"))
 
 
@@ -157,6 +157,7 @@ def profile_view(request):
     return render(request, "ProfilePage.html", context)
 
 
+
 @login_required
 def bet_view(request):
     bets = (
@@ -195,6 +196,7 @@ def candidate_detail(request, pk):
     message = None
     amount_value = ""
     coefficient = _calculate_coefficient(candidate)
+    bet_limit = Decimal("1000")
 
     if request.method == "POST":
         amount_value = (request.POST.get("amount") or "").strip()
@@ -208,6 +210,8 @@ def candidate_detail(request, pk):
             else:
                 if amount <= 0:
                     error = "Сумма должна быть больше 0."
+                elif amount > bet_limit:
+                    error = f"Сумма превышает допустимый лимит ({bet_limit} BYN)."
                 else:
                     coefficient = _calculate_coefficient(candidate)
                     Bet.objects.create(
@@ -228,6 +232,7 @@ def candidate_detail(request, pk):
             "message": message,
             "amount_value": amount_value,
             "coefficient": coefficient,
+            "bet_limit": bet_limit,
         },
     )
 
