@@ -6,7 +6,7 @@ from django.core.paginator import Paginator
 from django.db.models import Sum
 from django.shortcuts import render, get_object_or_404, redirect
 
-from .forms import CandidateForm
+from .forms import CandidateForm, RegistrationForm
 from .models import Candidate, Bet
 
 def _serialize_candidate(candidate):
@@ -49,39 +49,34 @@ def login_view(request):
 
 def register_view(request):
     error = None
-    fullname_value = ""
-    email_value = ""
 
     if request.method == "POST":
-        fullname_value = (request.POST.get("fullname") or "").strip()
-        email_value = (request.POST.get("email") or "").strip().lower()
-        password = request.POST.get("password") or ""
-
-        if not fullname_value or not email_value or not password:
-            error = "Заполните все поля."
-        else:
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data["email"].lower()
+            password = form.cleaned_data["password"]
             User = get_user_model()
-            if User.objects.filter(email=email_value).exists():
+            if User.objects.filter(email=email).exists():
                 error = "Пользователь с такой почтой уже существует."
             else:
-                parts = fullname_value.split()
-                first_name = parts[0]
-                last_name = " ".join(parts[1:]) if len(parts) > 1 else ""
-
                 user = User.objects.create_user(
-                    email=email_value,
-                    username=email_value,
-                    first_name=first_name,
-                    last_name=last_name,
+                    email=email,
+                    username=email,
+                    first_name=form.cleaned_data["first_name"],
+                    last_name=form.cleaned_data["last_name"],
+                    course=form.cleaned_data.get("course"),
+                    group=form.cleaned_data.get("group"),
                     password=password,
                 )
                 login(request, user)
                 return redirect("bet")
+    else:
+        form = RegistrationForm()
 
     return render(
         request,
         "RegistrationPage.html",
-        {"error": error, "fullname": fullname_value, "email": email_value},
+        {"error": error, "form": form},
     )
 
 

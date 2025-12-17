@@ -18,21 +18,16 @@
                         <h1 class="h4 mb-4 text-center">Регистрация</h1>
                         <form class="form-register" id="registerForm" method="post" action="{% url 'register' %}">
                             {% csrf_token %}
-
-                            <div class="mb-3">
-                                <label class="form-label">ФИО</label>
-                                <input class="form-control" type="text" id="fullname" name="fullname" placeholder="Введите имя" value="{{ fullname|default_if_none:'' }}" required>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label">Email</label>
-                                <input class="form-control" type="email" id="email" name="email" placeholder="Введите почту" value="{{ email|default_if_none:'' }}" required>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label">Пароль</label>
-                                <input class="form-control" type="password" id="password" name="password" placeholder="Введите пароль" required>
-                            </div>
+                            {% for field in form %}
+                                <div class="mb-3">
+                                    <label class="form-label">{{ field.label }}</label>
+                                    {{ field }}
+                                    {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+                                    {% for error in field.errors %}
+                                        <div class="text-danger small">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
 
                             {% if error %}
                                 <div class="alert alert-danger py-2">{{ error }}</div>
