@@ -43,8 +43,42 @@
         <div class="col-12 col-lg-8">
             <div class="card shadow-sm mb-3">
                 <div class="card-body">
-                    <h3 class="h6 text-uppercase text-muted mb-3">Личные данные</h3>
-                    <div class="row g-2">
+                    {% if success_profile %}
+                        <div class="alert alert-success py-2">{{ success_profile }}</div>
+                    {% endif %}
+                    <details>
+                        <summary class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="h6 text-uppercase text-muted mb-0">Личные данные</span>
+                            <span class="btn btn-sm btn-outline-secondary" aria-label="Редактировать">
+                                Редактировать
+                            </span>
+                        </summary>
+                        <form method="post" class="mt-2">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="profile">
+                            <div class="row g-3">
+                                {% for field in profile_form %}
+                                    <div class="col-12 col-md-6">
+                                        <label class="form-label">{{ field.label }}</label>
+                                        {{ field }}
+                                        {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+                                        {% for error in field.errors %}
+                                            <div class="text-danger small">{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            {% if profile_form.non_field_errors %}
+                                {% for error in profile_form.non_field_errors %}
+                                    <div class="alert alert-danger py-2 mt-2">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                            <div class="mt-3">
+                                <button class="btn btn-primary" type="submit">Сохранить</button>
+                            </div>
+                        </form>
+                    </details>
+                    <div class="row g-2 mt-3">
                         <div class="col-12 col-md-6">
                             <div class="small text-muted">Имя</div>
                             <div class="fw-semibold">{{ user_obj.first_name }}</div>
@@ -52,6 +86,10 @@
                         <div class="col-12 col-md-6">
                             <div class="small text-muted">Фамилия</div>
                             <div class="fw-semibold">{{ user_obj.last_name }}</div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="small text-muted">Отчество</div>
+                            <div class="fw-semibold">{{ user_obj.patronymic|default:"—" }}</div>
                         </div>
                         <div class="col-12 col-md-6">
                             <div class="small text-muted">Курс</div>
@@ -96,9 +134,33 @@
 
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <h3 class="h6 text-uppercase text-muted mb-2">Безопасность</h3>
-                    <p class="mb-3 text-muted">TODO PLACEHOLDER.</p>
-                    <button class="btn btn-secondary" type="button" disabled>TODO</button>
+                    <h3 class="h6 text-uppercase text-muted mb-2">Изменить пароль</h3>
+                    {% if success_password %}
+                        <div class="alert alert-success py-2">{{ success_password }}</div>
+                    {% endif %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="password">
+                        <div class="row g-3">
+                            {% for field in password_form %}
+                                <div class="col-12 {% if forloop.first %}col-md-12{% else %}col-md-6{% endif %}">
+                                    <label class="form-label">{{ field.label }}</label>
+                                    {{ field }}
+                                    {% for error in field.errors %}
+                                        <div class="text-danger small">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        {% if password_form.non_field_errors %}
+                            {% for error in password_form.non_field_errors %}
+                                <div class="alert alert-danger py-2 mt-2">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                        <div class="mt-3">
+                            <button class="btn btn-outline-primary" type="submit">Обновить пароль</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
