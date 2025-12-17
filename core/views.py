@@ -47,8 +47,11 @@ def index(request):
             | Q(info__icontains=search_query)
             | Q(group__icontains=search_query)
         )
-    candidates = [_serialize_candidate(c) for c in candidates_qs]
-    return render(request, "MainPage.html", {"candidates": candidates, "search_query": search_query})
+    paginator = Paginator(candidates_qs, 12)
+    page_number = request.GET.get("page") or 1
+    page_obj = paginator.get_page(page_number)
+    candidates = [_serialize_candidate(c) for c in page_obj.object_list]
+    return render(request, "MainPage.html", {"candidates": candidates, "search_query": search_query, "page_obj": page_obj})
 
 
 def login_view(request):
@@ -170,13 +173,12 @@ def profile_view(request):
 
 @login_required
 def bet_view(request):
-    bets = (
-        Bet.objects.filter(user=request.user)
-        .select_related("candidate")
-        .order_by("-created_at")
-    )
+    bets_qs = Bet.objects.filter(user=request.user).select_related("candidate").order_by("-created_at")
+    paginator = Paginator(bets_qs, 10)
+    page_number = request.GET.get("page") or 1
+    page_obj = paginator.get_page(page_number)
     bet_items = []
-    for bet in bets:
+    for bet in page_obj.object_list:
         bet_items.append(
             {
                 "id": bet.id,
@@ -187,7 +189,7 @@ def bet_view(request):
                 "created_at": bet.created_at,
             }
         )
-    return render(request, "BetPage.html", {"bets": bet_items})
+    return render(request, "BetPage.html", {"bets": bet_items, "page_obj": page_obj})
 
 
 @login_required
