@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Пользователи</title>
+    {% include "partials/bootstrap.html" %}
+</head>
+<body class="bg-light">
+{% include "partials/navbar.html" %}
+<main class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="mb-0">Пользователи</h1>
+        <a class="btn btn-primary btn-sm" href="{% url 'user-create' %}">Новый пользователь</a>
+    </div>
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive mb-0">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Email</th>
+                        <th>Имя</th>
+                        <th>Роль</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for user in users %}
+                        <tr>
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.first_name }} {{ user.last_name }}</td>
+                            <td>{% if user.is_staff %}Админ{% else %}Пользователь{% endif %}</td>
+                            <td class="text-end d-flex justify-content-end gap-2">
+                                <a class="btn btn-sm btn-outline-primary" href="{% url 'user-update' user.id %}">Редактировать</a>
+                                <a class="btn btn-sm btn-outline-danger" href="{% url 'user-delete' user.id %}">Удалить</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

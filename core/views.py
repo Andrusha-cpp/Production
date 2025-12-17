@@ -7,7 +7,7 @@ from django.core.paginator import Paginator
 from django.db.models import Sum
 from django.shortcuts import render, get_object_or_404, redirect
 
-from .forms import CandidateForm, RegistrationForm, ProfileForm
+from .forms import CandidateForm, RegistrationForm, ProfileForm, AdminUserForm
 from .models import Candidate, Bet
 
 def _serialize_candidate(candidate):
@@ -277,3 +277,54 @@ def candidate_delete(request, pk):
         "candidates/confirm_delete.html",
         {"candidate": candidate},
     )
+
+
+@login_required
+def user_list(request):
+    if not request.user.is_staff:
+        return redirect("home")
+    User = get_user_model()
+    users = User.objects.all().order_by("id")
+    return render(request, "users/list.html", {"users": users})
+
+
+@login_required
+def user_create(request):
+    if not request.user.is_staff:
+        return redirect("home")
+    if request.method == "POST":
+        form = AdminUserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("user-list")
+    else:
+        form = AdminUserForm()
+    return render(request, "users/detail.html", {"form": form, "user_obj": None})
+
+
+@login_required
+def user_update(request, pk):
+    if not request.user.is_staff:
+        return redirect("home")
+    User = get_user_model()
+    user_obj = get_object_or_404(User, pk=pk)
+    if request.method == "POST":
+        form = AdminUserForm(request.POST, instance=user_obj)
+        if form.is_valid():
+            form.save()
+            return redirect("user-list")
+    else:
+        form = AdminUserForm(instance=user_obj)
+    return render(request, "users/detail.html", {"form": form, "user_obj": user_obj})
+
+
+@login_required
+def user_delete(request, pk):
+    if not request.user.is_staff:
+        return redirect("home")
+    User = get_user_model()
+    user_obj = get_object_or_404(User, pk=pk)
+    if request.method == "POST":
+        user_obj.delete()
+        return redirect("user-list")
+    return render(request, "users/confirm_delete.html", {"user_obj": user_obj})
