@@ -14,14 +14,23 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'bet' %}">Мои ставки</a>
                     </li>
-                    {% if request.user.is_staff %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'candidate-list' %}">Управление</a>
-                        </li>
-                    {% endif %}
                 {% endif %}
             </ul>
-            <div class="d-flex gap-2">
+            <div class="d-flex gap-2 align-items-center">
+                {% if request.user.is_authenticated %}
+                    <a class="btn btn-outline-light btn-sm" href="{% url 'profile' %}">Профиль</a>
+                {% endif %}
+                {% if request.user.is_staff %}
+                    <div class="dropdown">
+                        <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" id="adminDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            Управление
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminDropdown">
+                            <li><a class="dropdown-item" href="{% url 'candidate-list' %}">Участницы</a></li>
+                            <li><a class="dropdown-item" href="{% url 'candidate-create' %}">Добавить участницу</a></li>
+                        </ul>
+                    </div>
+                {% endif %}
                 {% if request.user.is_authenticated %}
                     <form method="post" action="{% url 'logout' %}">
                         {% csrf_token %}

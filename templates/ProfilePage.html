@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Профиль</title>
+    {% include "partials/bootstrap.html" %}
+</head>
+<body class="bg-light">
+{% include "partials/navbar.html" %}
+<main class="container py-4">
+    <div class="row g-4">
+        <div class="col-12 col-lg-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-3" style="width:96px;height:96px;font-size:32px;">
+                        {{ user_obj.first_name|default:user_obj.email|first|upper }}
+                    </div>
+                    <h2 class="h5 mb-1 d-flex justify-content-center align-items-center gap-2">
+                        <span>{{ user_obj.first_name }} {{ user_obj.last_name }}</span>
+                        <span class="badge text-bg-secondary">
+                            {% if user_obj.is_staff or user_obj.is_superuser %}Админ{% else %}Пользователь{% endif %}
+                        </span>
+                    </h2>
+                    <div class="text-muted small">{{ user_obj.email }}</div>
+                    {% if user_obj.patronymic %}
+                        <div class="text-muted small">Отчество: {{ user_obj.patronymic }}</div>
+                    {% endif %}
+                    <hr>
+                    <div class="d-flex justify-content-center gap-3">
+                        <div>
+                            <div class="fw-semibold">{{ bets_count }}</div>
+                            <div class="text-muted small">Ставок</div>
+                        </div>
+                        <div>
+                            <div class="fw-semibold">{{ total_amount }}</div>
+                            <div class="text-muted small">Общая сумма</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-8">
+            <div class="card shadow-sm mb-3">
+                <div class="card-body">
+                    <h3 class="h6 text-uppercase text-muted mb-3">Личные данные</h3>
+                    <div class="row g-2">
+                        <div class="col-12 col-md-6">
+                            <div class="small text-muted">Имя</div>
+                            <div class="fw-semibold">{{ user_obj.first_name }}</div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="small text-muted">Фамилия</div>
+                            <div class="fw-semibold">{{ user_obj.last_name }}</div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="small text-muted">Курс</div>
+                            <div class="fw-semibold">{{ user_obj.course|default:"—" }}</div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="small text-muted">Группа</div>
+                            <div class="fw-semibold">{{ user_obj.group|default:"—" }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h3 class="h6 text-uppercase text-muted mb-0">Недавние ставки</h3>
+                        <a class="btn btn-outline-primary btn-sm" href="{% url 'bet' %}">Все ставки</a>
+                    </div>
+                    {% if bets %}
+                        <div class="list-group list-group-flush">
+                            {% for bet in bets %}
+                                <div class="list-group-item px-0">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <div class="fw-semibold">{{ bet.candidate.last_name }} {{ bet.candidate.first_name }}</div>
+                                            <div class="text-muted small">{{ bet.created_at|date:"d.m.Y H:i" }}</div>
+                                        </div>
+                                        <div class="text-end">
+                                            <div class="fw-semibold">{{ bet.amount }}</div>
+                                            <div class="text-muted small">Коэф. {{ bet.coefficient }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-muted small">Ставок пока нет.</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h3 class="h6 text-uppercase text-muted mb-2">Безопасность</h3>
+                    <p class="mb-3 text-muted">TODO PLACEHOLDER.</p>
+                    <button class="btn btn-secondary" type="button" disabled>TODO</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

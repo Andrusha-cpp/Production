@@ -3,6 +3,7 @@ from decimal import Decimal, InvalidOperation
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.db.models import Sum
 from django.shortcuts import render, get_object_or_404, redirect
 
 from .forms import CandidateForm
@@ -88,6 +89,27 @@ def logout_view(request):
     if request.method == "POST":
         logout(request)
     return redirect("home")
+
+
+@login_required
+def profile_view(request):
+    user = request.user
+    bets_qs = (
+        Bet.objects.filter(user=user)
+        .select_related("candidate")
+        .order_by("-created_at")
+    )
+    stats = bets_qs.aggregate(total_amount=Sum("amount"))
+    last_bet = bets_qs.first()
+
+    context = {
+        "user_obj": user,
+        "bets": bets_qs[:5],
+        "bets_count": bets_qs.count(),
+        "total_amount": stats.get("total_amount") or Decimal("0"),
+        "last_bet": last_bet,
+    }
+    return render(request, "ProfilePage.html", context)
 
 
 @login_required
