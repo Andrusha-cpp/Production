@@ -4,34 +4,40 @@
 <head>
     <meta charset="utf-8">
     <title>Login</title>
-    <link rel="stylesheet" href="{% static 'css/Navbar.css' %}">
-    <link rel="stylesheet" href="{% static 'css/AuthPage.css' %}">
+    {% include "partials/bootstrap.html" %}
 </head>
-<body class="page">
+<body class="bg-light">
 
 {% include "partials/navbar.html" %}
 
-<main class="page-content">
-    <form class="form" id="loginForm" method="post" action="{% url 'login' %}">
-        {% csrf_token %}
-        <h1 class="form-title">Вход</h1>
+<main class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h1 class="h4 mb-4 text-center">Вход</h1>
+                    <form id="loginForm" method="post" action="{% url 'login' %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input class="form-control" type="email" id="email" name="email" placeholder="Введите почту" value="{{ email|default_if_none:'' }}" required>
+                        </div>
 
-        <div class="form-group">
-            <label class="form-label">Email</label>
-            <input class="form-input" type="email" id="email" name="email" placeholder="Введите почту" value="{{ email|default_if_none:'' }}" required>
+                        <div class="mb-3">
+                            <label class="form-label">Пароль</label>
+                            <input class="form-control" type="password" id="password" name="password" placeholder="Введите пароль" required>
+                        </div>
+
+                        {% if error %}
+                            <div class="alert alert-danger py-2">{{ error }}</div>
+                        {% endif %}
+
+                        <button class="btn btn-primary w-100" type="submit">Вход</button>
+                    </form>
+                </div>
+            </div>
         </div>
-
-        <div class="form-group">
-            <label class="form-label">Пароль</label>
-            <input class="form-input" type="password" id="password" name="password" placeholder="Введите пароль" required>
-        </div>
-
-        {% if error %}
-            <p class="error-text">{{ error }}</p>
-        {% endif %}
-
-        <button class="btn btn-primary" type="submit">Вход</button>
-    </form>
+    </div>
 </main>
 </body>
 </html>

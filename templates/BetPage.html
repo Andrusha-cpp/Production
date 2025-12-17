@@ -4,46 +4,48 @@
 <head>
     <meta charset="utf-8">
     <title>Мои ставки</title>
-    <link rel="stylesheet" href="{% static 'css/Navbar.css' %}">
-    <link rel="stylesheet" href="{% static 'css/AuthPage.css' %}">
-    <link rel="stylesheet" href="{% static 'css/BetPage.css' %}">
+    {% include "partials/bootstrap.html" %}
 </head>
-<body class="page">
+<body class="bg-light">
 
 {% include "partials/navbar.html" %}
 
-<main class="page-content">
-    <div class="bet-wrapper">
-        <section>
-            <div class="bets-header">
-                <h1 class="form-title">Мои ставки</h1>
-                <a class="nav-btn" href="{% url 'home' %}">К участницам</a>
-            </div>
-
-            {% if bets %}
-                <div class="bets-table">
-                    <div class="bets-row bets-row--head">
-                        <div>Участница</div>
-                        <div class="right">Ставка</div>
-                        <div class="right">Коэф.</div>
-                        <div class="right">Дата</div>
-                    </div>
-                    {% for bet in bets %}
-                        <div class="bets-row">
-                            <div>
-                                <a class="nav-link" href="{% url 'candidate-detail' bet.candidate_id %}">{{ bet.candidate_name }}</a>
-                            </div>
-                            <div class="right">{{ bet.amount }}</div>
-                            <div class="right">{{ bet.coefficient }}</div>
-                            <div class="right">{{ bet.created_at|date:"d.m.Y H:i" }}</div>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% else %}
-                <p class="info-text">Вы ещё не сделали ставок. Перейдите к участницам, чтобы начать.</p>
-            {% endif %}
-        </section>
+<main class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="mb-0">Мои ставки</h1>
+        <a class="btn btn-outline-primary" href="{% url 'home' %}">К участницам</a>
     </div>
+
+    {% if bets %}
+        <div class="card shadow-sm">
+            <div class="card-body p-0">
+                <div class="table-responsive mb-0">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                        <tr>
+                            <th scope="col">Участница</th>
+                            <th scope="col" class="text-end">Ставка</th>
+                            <th scope="col" class="text-end">Коэф.</th>
+                            <th scope="col" class="text-end">Дата</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for bet in bets %}
+                            <tr>
+                                <td><a href="{% url 'candidate-detail' bet.candidate_id %}">{{ bet.candidate_name }}</a></td>
+                                <td class="text-end">{{ bet.amount }}</td>
+                                <td class="text-end">{{ bet.coefficient }}</td>
+                                <td class="text-end">{{ bet.created_at|date:"d.m.Y H:i" }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-secondary">Вы ещё не сделали ставок. Перейдите к участницам, чтобы начать.</div>
+    {% endif %}
 </main>
 </body>
 </html>

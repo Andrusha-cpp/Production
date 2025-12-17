@@ -4,37 +4,41 @@
 <head>
     <meta charset="utf-8">
     <title>{{ title }}</title>
-    <link rel="stylesheet" href="{% static 'css/Navbar.css' %}">
-    <link rel="stylesheet" href="{% static 'css/AuthPage.css' %}">
-    <link rel="stylesheet" href="{% static 'css/Candidates.css' %}">
+    {% include "partials/bootstrap.html" %}
 </head>
-<body class="page">
+<body class="bg-light">
 {% include "partials/navbar.html" %}
-<main class="page-content">
-    <div class="card">
-        <form class="form form-wide" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <h1 class="form-title">{{ title }}</h1>
-            {% for field in form %}
-                <div class="form-group">
-                    <label class="form-label">{{ field.label }}</label>
-                    {{ field }}
-                    {% if field.help_text %}<div class="muted">{{ field.help_text }}</div>{% endif %}
-                    {% for error in field.errors %}
-                        <div class="error-text">{{ error }}</div>
-                    {% endfor %}
+<main class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h1 class="h4 mb-4">{{ title }}</h1>
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% for field in form %}
+                            <div class="mb-3">
+                                <label class="form-label">{{ field.label }}</label>
+                                {{ field }}
+                                {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+                                {% for error in field.errors %}
+                                    <div class="text-danger small">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                        {% if form.non_field_errors %}
+                            {% for error in form.non_field_errors %}
+                                <div class="alert alert-danger py-2">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                        <div class="d-flex gap-2">
+                            <a class="btn btn-outline-secondary" href="{% url 'candidate-list' %}">Назад</a>
+                            <button class="btn btn-primary" type="submit">Сохранить</button>
+                        </div>
+                    </form>
                 </div>
-            {% endfor %}
-            {% if form.non_field_errors %}
-                {% for error in form.non_field_errors %}
-                    <div class="error-text">{{ error }}</div>
-                {% endfor %}
-            {% endif %}
-            <div class="form-actions">
-                <a class="nav-link" href="{% url 'candidate-list' %}">Назад</a>
-                <button class="btn btn-primary" type="submit">Сохранить</button>
             </div>
-        </form>
+        </div>
     </div>
 </main>
 </body>
