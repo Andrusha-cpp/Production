@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Удалить пользователя</title>
+    {% include "partials/bootstrap.html" %}
+</head>
+<body class="bg-light">
+{% include "partials/navbar.html" %}
+<main class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h1 class="h5 mb-3">Удалить пользователя</h1>
+                    <p>Удалить пользователя <strong>{{ user_obj.email }}</strong>?</p>
+                    <form method="post" class="d-flex gap-2">
+                        {% csrf_token %}
+                        <a class="btn btn-outline-secondary" href="{% url 'user-list' %}">Отмена</a>
+                        <button class="btn btn-danger" type="submit">Удалить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>
