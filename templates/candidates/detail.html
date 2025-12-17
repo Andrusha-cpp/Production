@@ -28,6 +28,7 @@
             <div class="card shadow-sm">
                 <div class="card-body">
                     <h2 class="h5 mb-3">Сделать ставку</h2>
+                    <p class="text-muted small mb-2">Текущий коэффициент: <strong>{{ coefficient|floatformat:2 }}</strong></p>
                     <form method="post">
                         {% csrf_token %}
                         {% if error %}

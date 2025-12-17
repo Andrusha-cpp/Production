@@ -34,7 +34,7 @@
                             <tr>
                                 <td><a href="{% url 'candidate-detail' bet.candidate_id %}">{{ bet.candidate_name }}</a></td>
                                 <td class="text-end">{{ bet.amount }}</td>
-                                <td class="text-end">{{ bet.coefficient }}</td>
+                                <td class="text-end">{{ bet.coefficient|floatformat:2 }}</td>
                                 <td class="text-end">{{ bet.created_at|date:"d.m.Y H:i" }}</td>
                             </tr>
                         {% endfor %}
