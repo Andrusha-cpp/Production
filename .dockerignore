@@ -1,0 +1,13 @@
+.venv
+__pycache__
+*.py[cod]
+*.sqlite3
+*.log
+*.env
+*.egg-info
+build
+dist
+.idea
+.pytest_cache
+node_modules
+media

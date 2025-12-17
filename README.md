@@ -34,3 +34,26 @@
 ```bash
 python manage.py test
 ```
+
+В Docker:
+```bash
+# из корня проекта
+docker-compose run --rm web python manage.py test
+```
+
+## Запуск в Docker
+1. Соберите и запустите:
+   ```bash
+   docker-compose up --build
+   ```
+   Контейнер применит миграции и поднимет сервер на `http://localhost:8000/`.
+
+2. Остановить:
+   ```bash
+   docker-compose down
+   ```
+
+3. Выполнить команду внутри контейнера (например, миграции вручную):
+   ```bash
+   docker-compose run --rm web python manage.py migrate
+   ```
