@@ -49,3 +49,22 @@ class RegistrationForm(forms.ModelForm):
         if pwd and pwd2 and pwd != pwd2:
             self.add_error("password_confirm", "Пароли не совпадают.")
         return cleaned
+
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ["first_name", "last_name", "patronymic", "course", "group"]
+        labels = {
+            "first_name": "Имя",
+            "last_name": "Фамилия",
+            "patronymic": "Отчество",
+            "course": "Курс",
+            "group": "Группа",
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            existing_classes = field.widget.attrs.get("class", "")
+            field.widget.attrs["class"] = (existing_classes + " form-control").strip()

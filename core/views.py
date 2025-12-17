@@ -1,12 +1,13 @@
 from decimal import Decimal, InvalidOperation
 
-from django.contrib.auth import authenticate, login, logout, get_user_model
+from django.contrib.auth import authenticate, login, logout, get_user_model, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordChangeForm
 from django.core.paginator import Paginator
 from django.db.models import Sum
 from django.shortcuts import render, get_object_or_404, redirect
 
-from .forms import CandidateForm, RegistrationForm
+from .forms import CandidateForm, RegistrationForm, ProfileForm
 from .models import Candidate, Bet
 
 def _serialize_candidate(candidate):
@@ -107,6 +108,40 @@ def profile_view(request):
     )
     stats = bets_qs.aggregate(total_amount=Sum("amount"))
     last_bet = bets_qs.first()
+    success_profile = None
+    success_password = None
+
+    def _apply_bootstrap(form, labels_override=None):
+        for name, field in form.fields.items():
+            if labels_override and name in labels_override:
+                field.label = labels_override[name]
+            existing_classes = field.widget.attrs.get("class", "")
+            field.widget.attrs["class"] = (existing_classes + " form-control").strip()
+
+    profile_form = ProfileForm(instance=user)
+    password_form = PasswordChangeForm(user)
+    password_labels = {
+        "old_password": "Старый пароль",
+        "new_password1": "Новый пароль",
+        "new_password2": "Повторите пароль",
+    }
+
+    if request.method == "POST":
+        action = request.POST.get("action")
+        if action == "profile":
+            profile_form = ProfileForm(request.POST, instance=user)
+            if profile_form.is_valid():
+                profile_form.save()
+                success_profile = "Данные профиля обновлены."
+        elif action == "password":
+            password_form = PasswordChangeForm(user, request.POST)
+            if password_form.is_valid():
+                password_form.save()
+                update_session_auth_hash(request, password_form.user)
+                success_password = "Пароль обновлён."
+
+    _apply_bootstrap(profile_form)
+    _apply_bootstrap(password_form, password_labels)
 
     context = {
         "user_obj": user,
@@ -114,6 +149,10 @@ def profile_view(request):
         "bets_count": bets_qs.count(),
         "total_amount": stats.get("total_amount") or Decimal("0"),
         "last_bet": last_bet,
+        "profile_form": profile_form,
+        "password_form": password_form,
+        "success_profile": success_profile,
+        "success_password": success_password,
     }
     return render(request, "ProfilePage.html", context)
 
