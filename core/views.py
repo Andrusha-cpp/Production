@@ -22,6 +22,17 @@ def _serialize_candidate(candidate):
     }
 
 
+def _calculate_coefficient(candidate):
+    """Calculate a simple dynamic coefficient based on the bet pool."""
+    pool_total = Bet.objects.aggregate(total=Sum("amount")).get("total") or Decimal("0")
+    candidate_total = candidate.bets.aggregate(total=Sum("amount")).get("total") or Decimal("0")
+    # Add a larger smoothing value to avoid huge spikes when there are few or no bets.
+    smoothing = Decimal("1000")
+    smoothed_coeff = (pool_total + smoothing) / (candidate_total + smoothing)
+    coeff = max(Decimal("1.10"), min(smoothed_coeff, Decimal("10")))
+    return coeff.quantize(Decimal("0.01"))
+
+
 def index(request):
     if not request.user.is_authenticated:
         return redirect("login")
@@ -144,6 +155,7 @@ def candidate_detail(request, pk):
     error = None
     message = None
     amount_value = ""
+    coefficient = _calculate_coefficient(candidate)
 
     if request.method == "POST":
         amount_value = (request.POST.get("amount") or "").strip()
@@ -158,11 +170,12 @@ def candidate_detail(request, pk):
                 if amount <= 0:
                     error = "Сумма должна быть больше 0."
                 else:
+                    coefficient = _calculate_coefficient(candidate)
                     Bet.objects.create(
                         user=request.user,
                         candidate=candidate,
                         amount=amount,
-                        coefficient=Decimal("1"),
+                        coefficient=coefficient,
                     )
                     message = "Ставка принята!"
                     amount_value = ""
@@ -170,7 +183,13 @@ def candidate_detail(request, pk):
     return render(
         request,
         "candidates/detail.html",
-        {"candidate": candidate, "error": error, "message": message, "amount_value": amount_value},
+        {
+            "candidate": candidate,
+            "error": error,
+            "message": message,
+            "amount_value": amount_value,
+            "coefficient": coefficient,
+        },
     )
 
 
