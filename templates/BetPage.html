@@ -26,6 +26,8 @@
                             <th scope="col">Участница</th>
                             <th scope="col" class="text-end">Ставка</th>
                             <th scope="col" class="text-end">Коэф.</th>
+                            <th scope="col" class="text-end">Статус</th>
+                            <th scope="col" class="text-end">Выплата</th>
                             <th scope="col" class="text-end">Дата</th>
                         </tr>
                         </thead>
@@ -35,6 +37,16 @@
                                 <td><a href="{% url 'candidate-detail' bet.candidate_id %}">{{ bet.candidate_name }}</a></td>
                                 <td class="text-end">{{ bet.amount }}</td>
                                 <td class="text-end">{{ bet.coefficient|floatformat:2 }}</td>
+                                <td class="text-end">
+                                    {% if bet.status == "Выигрыш" %}
+                                        <span class="badge text-bg-success">Выигрыш</span>
+                                    {% elif bet.status == "Проигрыш" %}
+                                        <span class="badge text-bg-danger">Проигрыш</span>
+                                    {% else %}
+                                        <span class="badge text-bg-secondary">Ожидает</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end">{% if bet.payout is not None %}{{ bet.payout }}{% else %}—{% endif %}</td>
                                 <td class="text-end">{{ bet.created_at|date:"d.m.Y H:i" }}</td>
                             </tr>
                         {% endfor %}

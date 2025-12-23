@@ -1,6 +1,7 @@
 from django import forms
+from django.utils import timezone
 
-from .models import Candidate, CustomUser
+from .models import Candidate, CustomUser, Contest
 
 
 class CandidateForm(forms.ModelForm):
@@ -123,3 +124,51 @@ class AdminUserForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+
+class ContestForm(forms.ModelForm):
+    class Meta:
+        model = Contest
+        fields = ["name", "ends_at", "participants", "winner"]
+        labels = {
+            "name": "Название",
+            "ends_at": "Окончание",
+            "participants": "Участницы",
+            "winner": "Победитель",
+        }
+        widgets = {
+            "ends_at": forms.DateTimeInput(format="%Y-%m-%dT%H:%M", attrs={"type": "datetime-local"}),
+            "participants": forms.CheckboxSelectMultiple(),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["ends_at"].input_formats = ["%Y-%m-%dT%H:%M"]
+        if self.is_bound:
+            participant_ids = self.data.getlist("participants")
+            self.fields["winner"].queryset = Candidate.objects.filter(pk__in=participant_ids)
+        elif self.instance.pk:
+            self.fields["winner"].queryset = self.instance.participants.all()
+        else:
+            self.fields["winner"].queryset = Candidate.objects.none()
+        for name, field in self.fields.items():
+            existing_classes = field.widget.attrs.get("class", "")
+            if field.widget.__class__.__name__ in {"CheckboxSelectMultiple", "SelectMultiple"}:
+                field.widget.attrs["class"] = (existing_classes + " form-check-input").strip()
+            else:
+                field.widget.attrs["class"] = (existing_classes + " form-control").strip()
+
+    def clean(self):
+        cleaned = super().clean()
+        participants = cleaned.get("participants")
+        winner = cleaned.get("winner")
+        ends_at = cleaned.get("ends_at")
+        if winner and participants and winner not in participants:
+            self.add_error("winner", "Победитель должен быть среди участниц конкурса.")
+        if winner and ends_at and ends_at > timezone.now():
+            self.add_error("winner", "Победителя можно выбрать только после окончания конкурса.")
+        if self.instance.pk and self.instance.winner_id and winner != self.instance.winner:
+            self.add_error("winner", "Нельзя менять победителя после публикации результата.")
+        if participants is not None:
+            self.fields["winner"].queryset = participants
+        return cleaned

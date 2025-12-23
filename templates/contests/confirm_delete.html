@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Удалить конкурс</title>
+    {% include "partials/bootstrap.html" %}
+</head>
+<body class="bg-light">
+{% include "partials/navbar.html" %}
+<main class="container py-4">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h1 class="h5">Удалить конкурс «{{ contest.name }}»?</h1>
+            <p class="text-muted mb-3">Это действие нельзя отменить.</p>
+            <form method="post">
+                {% csrf_token %}
+                <div class="d-flex gap-2">
+                    <a class="btn btn-outline-secondary" href="{% url 'contest-list' %}">Отмена</a>
+                    <button class="btn btn-danger" type="submit">Удалить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+</body>
+</html>

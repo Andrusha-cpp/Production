@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
 
-from .models import Candidate, CustomUser, Bet
+from .models import Candidate, CustomUser, Bet, Contest
 
 
 @admin.register(CustomUser)
@@ -50,6 +50,14 @@ class CandidateAdmin(admin.ModelAdmin):
 
 @admin.register(Bet)
 class BetAdmin(admin.ModelAdmin):
-    list_display = ("user", "candidate", "amount", "coefficient", "created_at")
+    list_display = ("user", "candidate", "contest", "amount", "coefficient", "created_at")
     list_filter = ("created_at",)
     search_fields = ("user__email", "candidate__last_name")
+
+
+@admin.register(Contest)
+class ContestAdmin(admin.ModelAdmin):
+    list_display = ("name", "ends_at", "winner")
+    list_filter = ("ends_at",)
+    search_fields = ("name",)
+    filter_horizontal = ("participants",)
