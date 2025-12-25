@@ -9,22 +9,31 @@
     <body class="bg-light">
         {% include "partials/navbar.html" %}
         <main class="container py-4">
-            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-4">
+            <div class="mb-4">
                 <div>
-                    <h1 class="mb-1">Участницы</h1>
-                    <p class="text-muted mb-0">Выберите участницу, чтобы узнать больше и сделать ставку.</p>
+                    <h1 class="mb-1">Конкурс</h1>
                     {% if contest %}
-                        <div class="small mt-1">
-                            <span class="text-muted">Конкурс: {{ contest.name }} · Завершение {{ contest.ends_at|date:"d.m.Y H:i" }}</span>
-                            {% if not contest_is_open %}
-                                <span class="badge text-bg-warning ms-2">Приём ставок завершён</span>
-                            {% endif %}
+                        <div class="fw-semibold">{{ contest.name }}</div>
+                        <p class="text-muted mb-0">Завершение {{ contest.ends_at|date:"d.m.Y H:i" }}</p>
+                        <hr class="bg-info border-2 border-top border-info" />
+                        <div class="mt-2">
+                            <h3 class="mb-0">Участницы</h3>
                         </div>
                     {% else %}
-                        <div class="small text-muted mt-1">Конкурс ещё не создан.</div>
+                        <p class="text-muted mb-0">
+                            Конкурс не создан.
+                            {% if request.user.is_staff %}
+                                Добавьте конкурс в разделе управления.
+                            {% endif %}
+                        </p>
+                    {% endif %}
+                    {% if contest and not contest_is_open %}
+                        <div class="small mt-1">
+                            <span class="badge text-bg-warning">Приём ставок завершён</span>
+                        </div>
                     {% endif %}
                 </div>
-                <form class="d-flex gap-2" method="get" action="{% url 'home' %}">
+                <form class="d-flex gap-2 mt-3" method="get" action="{% url 'contest' %}">
                     <input type="search" name="q" class="form-control" placeholder="Поиск по имени, группе..." value="{{ search_query|default_if_none:'' }}">
                     <button class="btn btn-outline-primary" type="submit">Поиск</button>
                 </form>

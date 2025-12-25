@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Тотализатор</title>
+    {% include "partials/bootstrap.html" %}
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Space+Grotesk:wght@400;500;600&display=swap">
+    <style>
+        :root {
+            --ink: #1f2933;
+            --muted: #5b6770;
+            --accent: #e4572e;
+            --accent-soft: #f7c59f;
+            --surface: #ffffff;
+            --sea: #2a9d8f;
+            --sun: #f4a261;
+            --sky: #e9f1f7;
+        }
+
+        body {
+            font-family: "Space Grotesk", system-ui, sans-serif;
+            color: var(--ink);
+            background: #f5f7fb;
+        }
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            border-radius: 28px;
+            padding: 48px 48px 40px;
+            background: #ffffff;
+            box-shadow: 0 20px 60px rgba(31, 41, 51, 0.08);
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            inset: -40% -20% auto auto;
+            width: 320px;
+            height: 320px;
+            background: rgba(228, 87, 46, 0.08);
+            border-radius: 50%;
+        }
+
+        .hero-title {
+            font-family: "Playfair Display", serif;
+            font-size: clamp(2.2rem, 4vw, 3.4rem);
+            letter-spacing: 0.5px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: var(--muted);
+            max-width: 560px;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border-radius: 999px;
+            padding: 6px 14px;
+            background: #fff3e8;
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .feature-card {
+            border: none;
+            border-radius: 20px;
+            background: var(--surface);
+            box-shadow: 0 18px 50px rgba(31, 41, 51, 0.08);
+            height: 100%;
+        }
+
+        .feature-card h2 {
+            font-size: 0.85rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .cta {
+            background: var(--accent);
+            border: none;
+            color: #fff;
+            padding: 12px 22px;
+            border-radius: 12px;
+            box-shadow: 0 12px 24px rgba(228, 87, 46, 0.25);
+        }
+
+        .cta-outline {
+            border-radius: 12px;
+            border: 1px solid rgba(31, 41, 51, 0.2);
+            color: var(--ink);
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 32px 24px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-light">
+{% include "partials/navbar.html" %}
+<main class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-9">
+            <div class="hero mb-4">
+                <h1 class="hero-title mb-3">Ставки на участниц и честные итоги</h1>
+                <p class="hero-subtitle mb-4">
+                    Платформа для ставок на конкурс участниц. Следите за коэффициентами и
+                    управляйте ставками.
+                </p>
+                <div class="d-flex flex-wrap gap-2">
+                    {% if request.user.is_authenticated %}
+                        <a class="cta" href="{% url 'contest' %}">Перейти к конкурсу</a>
+                        <a class="btn cta-outline d-inline-flex align-items-center justify-content-center" href="{% url 'profile' %}">Профиль</a>
+                    {% else %}
+                        <a class="cta" href="{% url 'login' %}">Войти и перейти</a>
+                    <a class="btn cta-outline d-inline-flex align-items-center justify-content-center" href="{% url 'register' %}">Регистрация</a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="row g-3">
+                <div class="col-12 col-md-6">
+                    <div class="card feature-card">
+                        <div class="card-body">
+                            <h2>Функционал</h2>
+                            <ul class="mb-0">
+                                <li>Каталог участниц и поиск</li>
+                                <li>Ставки с коэффициентами</li>
+                                <li>Баланс, история и результаты</li>
+                                <li>Личный профиль и обновление данных</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="card feature-card">
+                        <div class="card-body">
+                            <h2>Текущий конкурс</h2>
+                            {% if contest %}
+                                <div class="fw-semibold">{{ contest.name }}</div>
+                                <div class="text-muted">Окончание: {{ contest.ends_at|date:"d.m.Y H:i" }}</div>
+                            {% else %}
+                                <div class="text-muted">Конкурс ещё не создан.</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

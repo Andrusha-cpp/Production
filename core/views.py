@@ -67,8 +67,12 @@ def _calculate_coefficient(candidate, contest):
 
 
 def index(request):
-    if not request.user.is_authenticated:
-        return redirect("login")
+    contest = _get_current_contest()
+    return render(request, "HomePage.html", {"contest": contest})
+
+
+@login_required
+def contest_view(request):
     contest = _get_current_contest()
     contest_is_open = bool(contest and contest.ends_at > timezone.now())
     search_query = (request.GET.get("q") or "").strip()
