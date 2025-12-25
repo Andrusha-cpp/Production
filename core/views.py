@@ -62,7 +62,7 @@ def _calculate_coefficient(candidate, contest):
     # Smoothing to reduce volatility and avoid huge odds for empty pools.
     smoothing = Decimal("200")
     smoothed_coeff = (pool_total + smoothing) / (candidate_total + smoothing)
-    coeff = max(Decimal("1.10"), min(smoothed_coeff, Decimal("3.00")))
+    coeff = max(Decimal("1.10"), min(smoothed_coeff, Decimal("10.00")))
     return coeff.quantize(Decimal("0.01"))
 
 
