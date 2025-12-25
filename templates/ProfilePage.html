@@ -36,6 +36,10 @@
                             <div class="fw-semibold">{{ total_amount }}</div>
                             <div class="text-muted small">Общая сумма</div>
                         </div>
+                        <div>
+                            <div class="fw-semibold">{{ balance }}</div>
+                            <div class="text-muted small">Баланс</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -111,19 +115,25 @@
                     </div>
                     {% if bets %}
                         <div class="list-group list-group-flush">
-                            {% for bet in bets %}
+                            {% for item in bets %}
+                                {% with bet=item.bet %}
                                 <div class="list-group-item px-0">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div>
                                             <div class="fw-semibold">{{ bet.candidate.last_name }} {{ bet.candidate.first_name }}</div>
                                             <div class="text-muted small">{{ bet.created_at|date:"d.m.Y H:i" }}</div>
+                                            <div class="text-muted small">Статус: {{ item.status }}</div>
                                         </div>
                                         <div class="text-end">
                                             <div class="fw-semibold">{{ bet.amount }}</div>
                                             <div class="text-muted small">Коэф. {{ bet.coefficient }}</div>
+                                            {% if item.payout is not None %}
+                                                <div class="text-muted small">Выплата: {{ item.payout }}</div>
+                                            {% endif %}
                                         </div>
                                     </div>
                                 </div>
+                                {% endwith %}
                             {% endfor %}
                         </div>
                     {% else %}

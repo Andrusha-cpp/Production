@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{{ title }}</title>
+    {% include "partials/bootstrap.html" %}
+</head>
+<body class="bg-light">
+{% include "partials/navbar.html" %}
+<main class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="mb-0">{{ title }}</h1>
+        <a class="btn btn-outline-secondary btn-sm" href="{% url 'contest-list' %}">Назад</a>
+    </div>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="row g-3">
+                    {% for field in form %}
+                        <div class="col-12 {% if field.name == 'name' %}col-md-8{% else %}col-md-6{% endif %}">
+                            <label class="form-label">{{ field.label }}</label>
+                            {% if field.name == "participants" %}
+                                <div class="border rounded p-2 bg-white">
+                                    {% for checkbox in field %}
+                                        <div class="form-check">
+                                            {{ checkbox.tag }}
+                                            <label class="form-check-label" for="{{ checkbox.id_for_label }}">{{ checkbox.choice_label }}</label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ field }}
+                            {% endif %}
+                            {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+                            {% for error in field.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>
+                {% if form.non_field_errors %}
+                    {% for error in form.non_field_errors %}
+                        <div class="alert alert-danger py-2 mt-2">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+                <div class="mt-3">
+                    <button class="btn btn-primary" type="submit">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+</body>
+</html>

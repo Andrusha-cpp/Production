@@ -48,11 +48,19 @@ docker-compose up --build
 ```bash
 docker-compose run --rm web python manage.py migrate
 ```
+Загрузка демо‑данных (Docker):
+```bash
+docker-compose run --rm web python manage.py seed_candidates
+```
 
 ## Создание администратора и admin panel
 Создать суперпользователя (даёт доступ к Django admin и разделу управления в navbar):
 ```bash
 python manage.py createsuperuser
+```
+В Docker:
+```bash
+docker-compose run --rm web python manage.py createsuperuser
 ```
 Если нужен обычный пользователь со статусом admin, создайте его через `createsuperuser` или форму управления пользователями (доступна только staff), а затем в Django admin снимите флажок "superuser", оставив "staff".
 
@@ -67,3 +75,6 @@ python manage.py test
 ```bash
 docker-compose run --rm web python manage.py test
 ```
+
+## Сидинг данных
+В проекте есть команда для загрузки демо‑участниц с фото. Её удобно запускать после миграций при первом старте, чтобы быстро проверить интерфейс.

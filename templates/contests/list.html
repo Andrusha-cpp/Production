@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Конкурсы</title>
+    {% include "partials/bootstrap.html" %}
+</head>
+<body class="bg-light">
+{% include "partials/navbar.html" %}
+<main class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="mb-0">Конкурсы</h1>
+        <a class="btn btn-primary btn-sm" href="{% url 'contest-create' %}">Новый конкурс</a>
+    </div>
+    {% if contests %}
+        <div class="card shadow-sm">
+            <div class="card-body p-0">
+                <div class="table-responsive mb-0">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Название</th>
+                            <th>Окончание</th>
+                            <th>Победитель</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for contest in contests %}
+                            <tr>
+                                <td>{{ contest.id }}</td>
+                                <td>{{ contest.name }}</td>
+                                <td>{{ contest.ends_at|date:"d.m.Y H:i" }}</td>
+                                <td>
+                                    {% if contest.winner %}
+                                        {{ contest.winner.last_name }} {{ contest.winner.first_name }}
+                                    {% else %}
+                                        —
+                                    {% endif %}
+                                </td>
+                                <td class="text-end d-flex justify-content-end gap-2">
+                                    <a class="btn btn-sm btn-outline-primary" href="{% url 'contest-update' contest.id %}">Редактировать</a>
+                                    <a class="btn btn-sm btn-outline-danger" href="{% url 'contest-delete' contest.id %}">Удалить</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-secondary">Конкурсы не созданы.</div>
+    {% endif %}
+</main>
+</body>
+</html>
